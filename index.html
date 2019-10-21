@@ -1,0 +1,146 @@
+<html>
+   <head>
+      <title>Title of the document</title>
+      <style>
+         table {
+           border-collapse: collapse;
+           margin-top: 15px;
+         }
+         
+         table, td, th {
+           border: 1px solid black;
+         }
+         .id{
+           color: blue;
+           cursor: pointer;
+         }
+
+         </style>
+   </head>
+   <body>
+      <h1>Welcome</h1> 
+      <h4>For user information through "ID" click on All Tweets and then click on ID</h4>
+      <h4>For user information through "Screen Name" click on "Users" and then click on Screen Name</h4>
+      <button onclick="loadDoc()">All tweets</button>
+      <button onclick="loadUsers()">Users</button>
+      <button onclick="idandtext()">Id & Text</button>
+      <button onclick="getUrl()">URL</button>
+      <br></br>
+      
+
+      <!-- <button onclick="window.location.href = 'http://localhost:7000/question1';">ID & text</button><br> -->
+      <br>
+      <!-- <form id="name">
+          Enter name:  <input type="text" id="userName">
+        <input type="button" onclick="getUserdata(document.getElementById('userName').value)" value="Submit">
+      </form>
+      <form id="tweetId">
+          Enter Id:  <input type="number" id="tweetId">
+        <input type="button" onclick="gettweetdata(document.getElementById('tweetId').value)" value="Submit">
+      </form> -->
+      <div id="tweets"></div>
+      <script>
+
+
+function getUrl() {
+           var xhttp = new XMLHttpRequest();
+           xhttp.onreadystatechange = function() {
+             if (this.readyState == 4 && this.status == 200) {
+              var x ="<table><tr><th>ID</th><th>URLS</th></tr>";
+               
+               var data  = JSON.parse(this.responseText);
+                
+               for (i = 0; i < data.length; i++) {
+                  x = x + "<tr><td>" + data[i].id + "</td><td>" + data[i].urls +  "</td></tr>";
+               }
+               document.getElementById("tweets").innerHTML = x + "</table>";
+
+              
+             }
+           };
+           xhttp.open("GET", "http://127.0.0.1:3000/links", true);
+           xhttp.send();
+         }
+
+
+
+
+
+
+
+
+
+function idandtext() {
+           var xhttp = new XMLHttpRequest();
+           xhttp.onreadystatechange = function() {
+             if (this.readyState == 4 && this.status == 200) {
+               var data  = (this.responseText);
+              //console.log(data.length)
+              document.getElementById("tweets").innerHTML =data ;
+             }
+           };
+           xhttp.open("GET", "http://127.0.0.1:3000/question1", true);
+           xhttp.send();
+         }
+
+
+         function loadDoc() {
+           var xhttp = new XMLHttpRequest();
+           xhttp.onreadystatechange = function() {
+             if (this.readyState == 4 && this.status == 200) {
+               var x ="<table><tr><th>ID</th><th>Date</th><th>Tweet</th></tr>";
+               var data  = JSON.parse(this.responseText);
+               for (i = 0; i < data.length; i++) {
+                  x = x + "<tr><td class='id' onclick='gettweetdata("+data[i].ID + ")'>" + data[i].ID + "</td><td>" + data[i].CreatedAt +  "</td><td>" +data[i].Text +  "</td></tr>";
+               }
+               document.getElementById("tweets").innerHTML = x + "</table>";
+             }
+           };
+           xhttp.open("GET", "http://127.0.0.1:3000/question1", true);
+           xhttp.send();
+         }
+         function loadUsers() {
+           var xhttp = new XMLHttpRequest();
+           xhttp.onreadystatechange = function() {
+             if (this.readyState == 4 && this.status == 200) {
+               var x ="<table><tr><th>Name</th><th>Scren Name</th></tr>";
+               var data  = JSON.parse(this.responseText);
+               for (i = 0; i < data.length; i++) {
+                 var name = data[i].screenName;
+                  x = x + "<tr><td>"+ data[i].User+"</td><td class='id' onclick='getUserdata(\""+data[i].screenName+"\")' >" + data[i].screenName +  "</td></tr>";
+               }
+               document.getElementById("tweets").innerHTML = x + "</table>";
+             }
+           };
+           xhttp.open("GET", "http://127.0.0.1:3000/question2", true);
+           xhttp.send();
+         }
+         function gettweetdata(id) {
+           var xhttp = new XMLHttpRequest();
+           xhttp.onreadystatechange = function() {
+             if (this.readyState == 4 && this.status == 200) {
+               var data  = this.responseText;
+               document.getElementById("tweets").innerHTML = data;
+             }
+           };
+           xhttp.open("GET", "http://127.0.0.1:3000/tweets?id="+id, true);
+           xhttp.send();
+         }
+
+         
+         function getUserdata(name) {
+           console.log("name herre",name);
+           var xhttp = new XMLHttpRequest();
+           xhttp.onreadystatechange = function() {
+             if (this.readyState == 4 && this.status == 200) {
+               var data  = this.responseText;
+               document.getElementById("tweets").innerHTML = data;
+             }
+           };
+           xhttp.open("GET", "http://127.0.0.1:3000/users?name="+name, true);
+           xhttp.send();
+         }
+         </script>
+   </body>
+   
+</html>
